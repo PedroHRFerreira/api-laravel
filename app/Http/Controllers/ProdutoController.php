@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Produto;
-use App\Enums\CategoriaProduto;
 use App\Http\Requests\StoreProdutoRequest;
 
 class ProdutoController extends Controller
@@ -34,8 +33,17 @@ class ProdutoController extends Controller
 
     public function store(StoreProdutoRequest $request)
     {
-        $produto = Produto::create($request->all());
-        // O codigo usando acima está usando o método create() do Eloquent para criar um novo produto no banco de dados com os dados fornecidos na requisição. usando um o metodo do eloquent que se chamada create, eu usei o $request->all() pois vai ser postado todos os dados que estão dentro da variável da model $fillable e estou pegando todos todos os dados usando o Request $request.
+        $produto = Produto::create($request->validated());
+
+        // O codigo usando acima foi mudado de $request->all() para $request->validated() pois assim eu estou usando o metodo validated() do request para validar os dados da requisição, e no all() eu pegaria todos os dados mas não ia validar eles, assim eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos.
+
+        if(!$produto) {
+            return response()->json([
+                'message' => 'Dados não encontrados.',
+                'status' => 'error',
+                'code' => 404,
+            ]);
+        }
 
         return response()->json([
             'produto' => $produto,
@@ -44,14 +52,6 @@ class ProdutoController extends Controller
         ]);
 
         // O código acima está retornando uma resposta JSON com o produto recém-criado, um status de sucesso e um código de status HTTP 200 (Created).
-
-        if(!$request) {
-            return response()->json([
-                'message' => 'Dados inválidos.',
-                'status' => 'error',
-                'code' => 422,
-            ]);
-        }
 
     }
 
@@ -70,9 +70,9 @@ class ProdutoController extends Controller
 
         // Depois do find, eu estou fazendo um verificação para ver se o produto existe, se não existir, ele retorna uma resposta JSON com uma mensagem de erro.
 
-        $produto->update($request->all());
+        $produto->update($request->validated());
 
-        // acima Já que se passar da validação, eu estou usando o metodo update() do Eloquent para atualizar o produto com os dados fornecidos na requisição. Nota que eu estou passando $request->all() para atualizar todos os campos do produto com os dados da requisição, pois assim eu foco em deixa a model cuidar dos campos que eu quero atualizar.
+        // acima eu estava usando o all() para pegar todos os dados da requisição, mas agora eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos, dessa forma eu estou usando o update() do Eloquent para atualizar o produto no banco de dados com os dados da requisição validados.
 
         return response()->json([
             'produto' => $produto,
