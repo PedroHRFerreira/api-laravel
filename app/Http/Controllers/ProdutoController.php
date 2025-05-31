@@ -4,14 +4,36 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Produto;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreProdutoRequest;
 
 class ProdutoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produtos = Produto::all();
+        $query = Produto::query();
+        // eu estava usando o all() para pegar todos os dados da requisição, mas agora eu estou usando o query() para criar uma consulta SQL para buscar os produtos no banco de dados. Com isso posso adicionar filtros, ordenar, paginar, etc.
+
+        if ($request->has('nome')) {
+            $query->where('nome', $request->nome);
+        }
+
+        // Acima eu estou usando o where() do query para buscar os produtos no banco de dados com o nome igual ao nome informado na requisição.
+        
+
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
+
+        // Acima eu estou usando o where() do query para buscar os produtos no banco de dados com a categoria igual ao type informado na requisição.
+        
+
         // dd($produtos) utilizado para depurar e verificar o conteúdo da variável
+
+        $produtos = $query->get();
+
+        // Acima eu estou usando o get() do query para buscar os produtos no banco de dados.
+
 
        // empty Verifica se a coleção está vazia
         if(empty($produtos)){
@@ -28,7 +50,7 @@ class ProdutoController extends Controller
             'code' => 200,
         ]);
 
-        // Ou seja a function de index() está retornando todos os produtos cadastrados no banco de dados usando o Produto::all().
+        // Ou seja a function de index() está retornando todos os produtos cadastrados no banco de dados usando o resultado da consulta do $produtos que está pegando do query.
     }
 
     public function store(StoreProdutoRequest $request)
