@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Enums;
+
 enum CategoriaProduto: string {
     case ELETRONICO = 'eletronico';
     case MOVEIS = 'moveis';
