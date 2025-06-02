@@ -7,6 +7,7 @@ use App\Models\Produto;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProdutoRequest;
 use App\Http\Resources\ProdutoResource;
+use App\Services\ProdutoService;
 
 class ProdutoController extends Controller
 {
@@ -50,11 +51,11 @@ class ProdutoController extends Controller
         // Antes eu está usando o response()->json e criando o formato de JSON no controller do produto, mas eu crei o Resources, para cuidar do formato de JSON se envolver o Controller nisso.
     }
 
-    public function store(StoreProdutoRequest $request)
+    public function store(StoreProdutoRequest $request, ProdutoService $produtoService)
     {
-        $produto = Produto::create($request->validated());
+        $produto = $produtoService->criarProdutoComDesconto($request->validated());
 
-        // O codigo usando acima foi mudado de $request->all() para $request->validated() pois assim eu estou usando o metodo validated() do request para validar os dados da requisição, e no all() eu pegaria todos os dados mas não ia validar eles, assim eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos.
+        // O codigo acima recebe o request e o produtoService, e usa o produtoService para criar o produto com o desconto, e retorna o produto criado, logo depois ele cria uma resposta JSON com o produto criado, usando o ProdutoResource, que caso tiver um erro ele retorna uma resposta JSON com uma mensagem de erro.
 
         if(!$produto) {
             return response()->json([
@@ -88,7 +89,7 @@ class ProdutoController extends Controller
 
         // acima eu estava usando o all() para pegar todos os dados da requisição, mas agora eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos, dessa forma eu estou usando o update() do Eloquent para atualizar o produto no banco de dados com os dados da requisição validados.
 
-        return new ProdutoResource($produtos);
+        return new ProdutoResource($produto);
         
         // Finalmente, o código retorna uma resposta JSON com o produto atualizado, um status de sucesso e um código de status HTTP 200 (OK).
     }
