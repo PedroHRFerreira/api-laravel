@@ -45,7 +45,7 @@ class ProdutoController extends Controller
             ]);
         }
 
-        return ProdutoResource::collection($produtos);
+        return new ProdutoResource($produtos);
 
         // Antes eu está usando o response()->json e criando o formato de JSON no controller do produto, mas eu crei o Resources, para cuidar do formato de JSON se envolver o Controller nisso.
     }
@@ -64,7 +64,7 @@ class ProdutoController extends Controller
             ]);
         }
 
-        return ProdutoResource::collection($produto);
+        return new ProdutoResource($produto);
         // O código acima está retornando uma resposta JSON com o produto recém-criado, um status de sucesso e um código de status HTTP 200 (Created).
 
     }
@@ -88,8 +88,8 @@ class ProdutoController extends Controller
 
         // acima eu estava usando o all() para pegar todos os dados da requisição, mas agora eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos, dessa forma eu estou usando o update() do Eloquent para atualizar o produto no banco de dados com os dados da requisição validados.
 
-        return ProdutoResource::collection($produto);
-
+        return new ProdutoResource($produtos);
+        
         // Finalmente, o código retorna uma resposta JSON com o produto atualizado, um status de sucesso e um código de status HTTP 200 (OK).
     }
 

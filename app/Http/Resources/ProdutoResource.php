@@ -16,15 +16,7 @@ class ProdutoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'nome' => $this->nome,
-            'preco' => $this->preco,
-            'descricao' => $this->descricao,
-            'type' => $this->type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ];
+        return parent::toArray($request);
 
         // oque acima é oque vai ser exibido no JSON, isso no objetos. Eu posso mudar isso para deixar se exibido apenas oque eu desejo.
     }
