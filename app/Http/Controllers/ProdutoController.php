@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProdutoRequest;
+use App\Http\Resources\ProdutoResource;
 
 class ProdutoController extends Controller
 {
@@ -44,13 +45,9 @@ class ProdutoController extends Controller
             ]);
         }
 
-        return response()->json([
-            'produtos' => $produtos,
-            'status' => 'success',
-            'code' => 200,
-        ]);
+        return ProdutoResource::collection($produtos);
 
-        // Ou seja a function de index() está retornando todos os produtos cadastrados no banco de dados usando o resultado da consulta do $produtos que está pegando do query.
+        // Antes eu está usando o response()->json e criando o formato de JSON no controller do produto, mas eu crei o Resources, para cuidar do formato de JSON se envolver o Controller nisso.
     }
 
     public function store(StoreProdutoRequest $request)
@@ -67,12 +64,7 @@ class ProdutoController extends Controller
             ]);
         }
 
-        return response()->json([
-            'produto' => $produto,
-            'status' => 'success',
-            'code' => 200,
-        ]);
-
+        return ProdutoResource::collection($produto);
         // O código acima está retornando uma resposta JSON com o produto recém-criado, um status de sucesso e um código de status HTTP 200 (Created).
 
     }
@@ -96,11 +88,7 @@ class ProdutoController extends Controller
 
         // acima eu estava usando o all() para pegar todos os dados da requisição, mas agora eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos, dessa forma eu estou usando o update() do Eloquent para atualizar o produto no banco de dados com os dados da requisição validados.
 
-        return response()->json([
-            'produto' => $produto,
-            'status' => 'success',
-            'code' => 200,
-        ]);
+        return ProdutoResource::collection($produto);
 
         // Finalmente, o código retorna uma resposta JSON com o produto atualizado, um status de sucesso e um código de status HTTP 200 (OK).
     }
