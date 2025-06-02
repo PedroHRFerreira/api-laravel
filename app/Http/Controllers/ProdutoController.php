@@ -70,6 +70,18 @@ class ProdutoController extends Controller
 
     }
 
+    protected ProdutoService $produtoService;
+
+    // O codigo acima recebe o produtoService, é preciso fazer isso para poder usar o produtoService no controller, com isso eu posso usar o produtoService.
+
+    public function __construct(ProdutoService $produtoService)
+    {
+        $this->produtoService = $produtoService;
+    }
+
+    // O codigo acima eu faço uma função construtora,, com isso uso o $this que é uma variável que recebe o produtoService e depois atribuo o produtoService a essa variável que se chama $produtoService
+
+
     public function update(StoreProdutoRequest $request, string $id)
     {
         $produto = Produto::find($id);
@@ -85,9 +97,9 @@ class ProdutoController extends Controller
 
         // Depois do find, eu estou fazendo um verificação para ver se o produto existe, se não existir, ele retorna uma resposta JSON com uma mensagem de erro.
 
-        $produto->update($request->validated());
+        $this->produtoService->atualizarProdutoComDesconto($produto, $request->validated());
 
-        // acima eu estava usando o all() para pegar todos os dados da requisição, mas agora eu estou usando o validated() para validar os dados da requisição e retornar os erros se eles forem inválidos, dessa forma eu estou usando o update() do Eloquent para atualizar o produto no banco de dados com os dados da requisição validados.
+        // acima estou usando o produtoService para atualizar o produto com o desconto, ou seja o $this é uma váriavel que recebe o produtoService que está passando a function atualizarProdutoComDesconto, e a function recebe o produto e o request como params e retorna o produto atualizado e com o desconto, pois o com o $produto é possivel atualizar o produto para pegar os dados e depois pegar o JSON com o $request.
 
         return new ProdutoResource($produto);
         

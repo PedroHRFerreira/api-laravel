@@ -1,6 +1,6 @@
 <?php
 
-// Foi criado esse arquivo para manter a lógica de negocio do produto, como o desconto, e a criação do produto com o desconto e outras que possam ser usadas futuramente.
+// Foi criado esse service para centralizar a lógica de negócio relacionada ao Produto, como aplicação de descontos com base na categoria (tipo) do produto, e facilitar a manutenção e reutilização dessa lógica.
 
 namespace App\Services;
 
@@ -9,24 +9,59 @@ use App\Enums\CategoriaProduto;
 
 class ProdutoService
 {
+    /**
+     * Cria um novo produto com desconto aplicado de acordo com sua categoria.
+     *
+     * @param array $dados
+     * @return Produto
+     * 
+     * No código acima eu estou passando o @param array $dados, que representa os dados do produto a serem criados, e o @return Produto, que representa o produto criado.
+     */
     public function criarProdutoComDesconto(array $dados): Produto
-
-        // O metodo criarProdutoComDesconto recebe um array de dados e retorna um objeto Produto com o desconto aplicado, ele será usado no controller para criar o produto com o desconto.
-
     {
+        // Aplica 20% de desconto se a categoria for ELETRONICO
         if ($dados['type'] === CategoriaProduto::ELETRONICO->value) {
             $dados['preco'] = $dados['preco'] * 0.8;
         }
 
-        // Primeira condição verifica se o type do produto é eletronico, se for ele aplica um desconto de 20% no preco do produto
-
+        // Aplica 10% de desconto se a categoria for MOVEIS
         if ($dados['type'] === CategoriaProduto::MOVEIS->value) {
             $dados['preco'] = $dados['preco'] * 0.9;
         }
 
-        // Segunda condição verifica se o type do produto é moveis, se for ele aplica um desconto de 10% no preco do produto
-
+        // Cria o produto com o preço ajustado
         return Produto::create($dados);
-        // No final retorna o produto com o desconto, isso com ele criado.
+    }
+
+    /**
+     * Atualiza um produto, aplicando o desconto apenas se a categoria (type) for alterada.
+     *
+     * @param Produto $produto
+     * @param array $dados
+     * @return Produto
+     */
+    public function atualizarProdutoComDesconto(Produto $produto, array $dados): Produto
+    {
+        // Verifica se a categoria foi alterada antes de aplicar desconto
+
+        // O isset() verifica se a chave 'type' existe no array $dados se existir ele retorna true se não ele retorna false
+        
+        if (isset($dados['type']) && $dados['type'] !== $produto->type) {
+
+            // Aplica 20% de desconto se a nova categoria for ELETRONICO
+            if ($dados['type'] === CategoriaProduto::ELETRONICO->value) {
+                $dados['preco'] = $dados['preco'] * 0.8;
+            }
+
+            // Aplica 10% de desconto se a nova categoria for MOVEIS
+            if ($dados['type'] === CategoriaProduto::MOVEIS->value) {
+                $dados['preco'] = $dados['preco'] * 0.9;
+            }
+        }
+
+        // Atualiza o produto com os dados (com ou sem desconto)
+        $produto->update($dados);
+
+        return $produto;
     }
 }
