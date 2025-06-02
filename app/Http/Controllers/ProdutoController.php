@@ -26,7 +26,7 @@ class ProdutoController extends Controller
         }
 
         // Acima eu estou usando o where() do query para buscar os produtos no banco de dados com a categoria igual ao type informado na requisição.
-        
+
 
         // dd($produtos) utilizado para depurar e verificar o conteúdo da variável
 
