@@ -83,9 +83,9 @@ class produtoTest extends TestCase
 
         // Por fim, estou verificando se o produto foi atualizado no banco de dados, usando o método assertDatabaseHas do PHPUnit, que verifica se a tabela 'produtos' contém os dados especificados.
 
-        dump($produto);
+        print_r($produto);
 
-        // Adicionado o comando dump para exibir o conteúdo da variável $produto na saída do PHP, foi pensado que ajudaria na depuração do teste.
+        // Adicionado o comando print_r para exibir o conteúdo da variável $produto na saída do PHP, antes estava sendo utilizado o dump para exibir o conteúdo da variável $produtos na saída do PHP, porém o dump é limitado em algumas informações, o print_r é mais completo, mas não é tão amigavél a exibição de dados.
     }
 
     function test_delete_produto(): void
